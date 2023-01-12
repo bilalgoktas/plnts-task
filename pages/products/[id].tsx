@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import AddToCartButton from "../../components/AddToCartButton";
 import client from "../../services/graphqlService";
@@ -23,6 +24,11 @@ type Props = {
 const ProductDetail = ({ data }: Props) => {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const { product } = data.data;
+
+  const router = useRouter();
+  if (router.isFallback) {
+    return <div>Loading...</div>;
+  }
   return (
     <div className="w-[1200px] mx-auto flex justify-between items-start mt-12">
       <div>
