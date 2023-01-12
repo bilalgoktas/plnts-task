@@ -23,7 +23,6 @@ type Props = {
 const ProductDetail = ({ data }: Props) => {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const { product } = data.data;
-  console.log(product);
   return (
     <div className="w-[1200px] mx-auto flex justify-between items-start mt-12">
       <div>
@@ -76,7 +75,6 @@ export async function getStaticProps({ params }: any) {
   const data = await client.query({ query: productQuery, variables: { id } });
   return {
     props: { data },
-    revalidate: 60,
   };
 }
 
