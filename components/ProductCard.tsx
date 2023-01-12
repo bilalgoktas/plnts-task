@@ -12,7 +12,7 @@ type Props = {
 
 const ProductCard = ({ brand, gallery, id, name, prices }: Props) => {
   return (
-    <Link href={`/products/${id}`}>
+    <Link href={`/${id}`}>
       <div className="flex flex-col items-center border p-4">
         <img
           className="w-[320px] h-[320px] object-contain"
