@@ -28,6 +28,7 @@ const ProductDetail = ({ data }: Props) => {
       <div>
         {product.gallery.map((g: string, index: number) => (
           <img
+            key={index}
             className={`w-[96px] h-[96px] object-contain my-4 cursor-pointer border ${
               activeImageIndex === index && "border-2 border-black"
             }`}
