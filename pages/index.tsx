@@ -1,86 +1,102 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
+import type { NextPage } from "next";
+import Head from "next/head";
+import Link from "next/link";
+import { useState } from "react";
+import Header from "../components/Header";
+import ProductCard from "../components/ProductCard";
+import client from "../services/graphqlService";
+import { categoriesQuery } from "../services/queries";
 
-const Home: NextPage = () => {
+type HomeProps = {
+  data: {
+    data: {
+      categories: {
+        name: string;
+        products: {
+          id: string;
+          brand: string;
+          name: string;
+          gallery: string[];
+          prices: {
+            amount: number;
+          }[];
+        }[];
+      }[];
+    };
+  };
+};
+
+const Home: NextPage<HomeProps> = ({ data }) => {
+  const { categories } = data.data;
+  console.log(categories);
+  const [activeCategoryIndex, setActiveCategoryIndex] = useState(0);
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-2">
+    <>
       <Head>
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <div className="w-[1200px] mx-auto mt-12 ">
+        {categories.map(
+          (
+            c: {
+              name: string;
+              products: {
+                id: string;
+                brand: string;
+                name: string;
+                gallery: string[];
+                prices: {
+                  amount: number;
+                }[];
+              }[];
+            },
+            index: number
+          ) => (
+            <button
+              className={`p-4 uppercase ${
+                activeCategoryIndex === index && "border-b-2 border-red-800"
+              }`}
+              key={index}
+              onClick={() => setActiveCategoryIndex(index)}
+            >
+              {c.name}
+            </button>
+          )
+        )}
 
-      <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
-        <h1 className="text-6xl font-bold">
-          Welcome to{' '}
-          <a className="text-blue-600" href="https://nextjs.org">
-            Next.js!
-          </a>
-        </h1>
-
-        <p className="mt-3 text-2xl">
-          Get started by editing{' '}
-          <code className="rounded-md bg-gray-100 p-3 font-mono text-lg">
-            pages/index.tsx
-          </code>
-        </p>
-
-        <div className="mt-6 flex max-w-4xl flex-wrap items-center justify-around sm:w-full">
-          <a
-            href="https://nextjs.org/docs"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Documentation &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Find in-depth information about Next.js features and its API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Learn &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Learn about Next.js in an interactive course with quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Examples &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Discover and deploy boilerplate example Next.js projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Deploy &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+        <div className="grid grid-cols-3 gap-8 mt-20">
+          {categories[activeCategoryIndex].products.map(
+            (product: {
+              id: string;
+              brand: string;
+              name: string;
+              gallery: string[];
+              prices: {
+                amount: number;
+              }[];
+            }) => (
+              <ProductCard
+                key={product.id}
+                brand={product.brand}
+                gallery={product.gallery}
+                id={product.id}
+                name={product.name}
+                prices={product.prices}
+              />
+            )
+          )}
         </div>
-      </main>
+      </div>
+    </>
+  );
+};
 
-      <footer className="flex h-24 w-full items-center justify-center border-t">
-        <a
-          className="flex items-center justify-center gap-2"
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-        </a>
-      </footer>
-    </div>
-  )
+export async function getServerSideProps() {
+  const data = await client.query({ query: categoriesQuery });
+  return {
+    props: { data },
+  };
 }
 
-export default Home
+export default Home;
