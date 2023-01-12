@@ -1,8 +1,6 @@
 import React, { useContext } from "react";
 import CartItem from "../../components/CartItem";
 import { AppContext } from "../../context/AppContext";
-import client from "../../services/graphqlService";
-import { categoriesQuery, productQuery } from "../../services/queries";
 
 type Props = {};
 

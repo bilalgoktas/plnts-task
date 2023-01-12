@@ -1,8 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
 import { useState } from "react";
-import Header from "../components/Header";
 import ProductCard from "../components/ProductCard";
 import client from "../services/graphqlService";
 import { categoriesQuery } from "../services/queries";
@@ -28,7 +26,6 @@ type HomeProps = {
 
 const Home: NextPage<HomeProps> = ({ data }) => {
   const { categories } = data.data;
-  console.log(categories);
   const [activeCategoryIndex, setActiveCategoryIndex] = useState(0);
   return (
     <>
