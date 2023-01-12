@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import AddToCartButton from "../../components/AddToCartButton";
-import client from "../../services/graphqlService";
-import { productIdsQuery, productQuery } from "../../services/queries";
+import AddToCartButton from "../components/AddToCartButton";
+import client from "../services/graphqlService";
+import { productIdsQuery, productQuery } from "../services/queries";
 
 type Props = {
   data: {
